@@ -1,16 +1,3 @@
-# todo_app
+# todo_app | ThePetNest Interview Task
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![Screenshot 2024-04-25 at 06 41 35](https://github.com/ajayg51/todo_app/assets/60037249/a683f152-71f8-4d0f-a518-0f3d60ba83ee)
