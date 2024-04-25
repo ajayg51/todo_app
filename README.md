@@ -1,7 +1,7 @@
 # todo_app | ThePetNest Interview Task
 
 ## Installation
-<a href="https://github.com/ajayg51/todo_app/raw/main/app_contents/app-release.apk">Click here to install apk</a>
+<a href="https://github.com/ajayg51/todo_app/raw/main/app_contents/app-release.apk" target="apk">Click here to install apk</a>
 
 ## Problem statement
 ![Screenshot 2024-04-25 at 06 41 35](https://github.com/ajayg51/todo_app/assets/60037249/a683f152-71f8-4d0f-a518-0f3d60ba83ee)
