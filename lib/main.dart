@@ -67,8 +67,10 @@ class _MyAppState extends State<MyApp> {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        home: Scaffold(
-          body: SplashScreen(),
+        home: SafeArea(
+          child: Scaffold(
+            body: SplashScreen(),
+          ),
         ),
       ),
     );

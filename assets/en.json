@@ -2,5 +2,8 @@
     "enter_task_name": "Enter task name",
     "add_task": "Add task",
     "add_task_err_title": "Error",
-    "add_task_err_msg": "Please enter task name"
+    "add_task_err_msg": "Please enter task name",
+    "empty_task_list_info": "Please add some tasks",
+    "splash_screen_info": "Todo App using BLoC",
+    "cancel_task_add": "Cancel"
 }

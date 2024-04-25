@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:todo_app/blocs/app_locale_block/app_locale_bloc.dart';
+import 'package:todo_app/blocs/app_locale_block/app_locale_event.dart';
+import 'package:todo_app/blocs/app_locale_block/app_locale_state.dart';
+import 'package:todo_app/blocs/app_theme_block/theme_bloc.dart';
+import 'package:todo_app/blocs/app_theme_block/theme_event.dart';
+import 'package:todo_app/blocs/app_theme_block/theme_state.dart';
 import 'package:todo_app/models/theme_model.dart';
+import 'package:todo_app/utils/app_localization.dart';
 import 'package:todo_app/utils/common_appbar.dart';
 import 'package:todo_app/utils/extensions.dart';
 import 'package:todo_app/widgets/home_screen.dart';
@@ -21,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (ctx) => const Scaffold(body:  HomeScreen()),
+            builder: (ctx) => const SafeArea(child:  Scaffold(body: HomeScreen())),
           ),
         );
       });
@@ -51,11 +59,11 @@ class _SplashScreenState extends State<SplashScreen> {
         body: Column(
           children: [
             CommonAppBar(isLightTheme: isLightTheme),
-            Expanded(
+            const Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  AnimatedLogo(isLightTheme: isLightTheme),
+                  AnimatedLogo(),
                 ],
               ),
             ),
@@ -67,11 +75,7 @@ class _SplashScreenState extends State<SplashScreen> {
 }
 
 class AnimatedLogo extends StatefulWidget {
-  const AnimatedLogo({
-    super.key,
-    required this.isLightTheme,
-  });
-  final bool isLightTheme;
+  const AnimatedLogo({super.key});
   @override
   State<AnimatedLogo> createState() => _AnimatedLogoState();
 }
@@ -84,6 +88,10 @@ class _AnimatedLogoState extends State<AnimatedLogo>
   @override
   void initState() {
     super.initState();
+
+    BlocProvider.of<ThemeBloc>(context).add(InitialThemeEvent());
+    BlocProvider.of<AppLocaleBloc>(context).add(AppLocaleChangeInitialEvent());
+
     animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 400))
       ..repeat(reverse: true);
@@ -100,26 +108,46 @@ class _AnimatedLogoState extends State<AnimatedLogo>
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: animationController,
-      builder: (_, __) => Column(
-        children: [
-          Image.asset(
-            "assets/splash_screen_logo.png",
-            width: sizeAnimation.value,
-            height: sizeAnimation.value,
-            color: !widget.isLightTheme ? Colors.white : null,
+    return BlocConsumer<ThemeBloc, ThemeState>(
+      bloc: BlocProvider.of<ThemeBloc>(context),
+      listener: (_, state) {},
+      builder: (_, state) {
+        bool isLightTheme = true;
+        if (state is AppThemeState) {
+          isLightTheme = state.isLightTheme;
+        }
+        return AnimatedBuilder(
+          animation: animationController,
+          builder: (_, __) => Column(
+            children: [
+              Image.asset(
+                "assets/splash_screen_logo.png",
+                width: sizeAnimation.value,
+                height: sizeAnimation.value,
+                color: isLightTheme ? null : Colors.white,
+              ),
+              12.verticalSpace,
+              BlocConsumer<AppLocaleBloc, LocaleState>(
+                bloc: BlocProvider.of<AppLocaleBloc>(context),
+                listener: (_, state) {},
+                builder: (_, state) {
+                  if (state is AppLocaleState) {
+                    return Text(
+                      AppLocalizations.translate("splash_screen_info"),
+                      style: TextStyle(
+                        fontSize: 22,
+                        color: isLightTheme ? null : Colors.white,
+                      ),
+                    );
+                  }
+                  // return Text("splash screen init state");
+                  return const SizedBox.shrink();
+                },
+              ),
+            ],
           ),
-          12.verticalSpace,
-          Text(
-            "Todo App using BLoC",
-            style: TextStyle(
-              fontSize: 22,
-              color: !widget.isLightTheme ? Colors.white : null,
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

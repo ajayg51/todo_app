@@ -2,5 +2,8 @@
     "enter_task_name": "टास्क दर्ज़ करें",
     "add_task": "टास्क जोडे",
     "add_task_err_title":"त्रुटि",
-    "add_task_err_msg":"कृपया टास्क का नाम दर्ज़ करें"
+    "add_task_err_msg":"कृपया टास्क का नाम दर्ज़ करें",
+    "empty_task_list_info" : "कृपया टास्क दर्ज़ करें",
+    "splash_screen_info" : "ब्लॉक प्रणाली द्वारा टू-डू ऐप",
+    "cancel_task_add":"रद्द करें"
 }

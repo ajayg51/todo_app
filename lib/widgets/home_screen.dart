@@ -2,7 +2,6 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:swipe_to/swipe_to.dart';
 import 'package:todo_app/blocs/app_locale_block/app_locale_bloc.dart';
 import 'package:todo_app/blocs/app_locale_block/app_locale_event.dart';
@@ -13,13 +12,10 @@ import 'package:todo_app/blocs/app_theme_block/theme_state.dart';
 import 'package:todo_app/blocs/home_screen_block/home_screen_bloc.dart';
 import 'package:todo_app/blocs/home_screen_block/home_screen_event.dart';
 import 'package:todo_app/blocs/home_screen_block/home_screen_state.dart';
-import 'package:todo_app/models/locale_model.dart';
 import 'package:todo_app/models/task_model.dart';
-import 'package:todo_app/models/theme_model.dart';
 import 'package:todo_app/utils/app_localization.dart';
 import 'package:todo_app/utils/common_appbar.dart';
 import 'package:todo_app/utils/extensions.dart';
-import 'package:todo_app/utils/separator.dart';
 import 'package:xid/xid.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -57,7 +53,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   CommonAppBar(
                     isLightTheme: isLightTheme,
                   ),
-                  const Expanded(child: BuildStates()),
+                  Expanded(
+                    child: BuildStates(
+                      isLightTheme: isLightTheme,
+                    ),
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -73,6 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               .addPostFrameCallback((timeStamp) {
                             showBottomSheet(
                               context: context,
+                              enableDrag: true,
                               builder: (ctx) {
                                 return BlocConsumer<ThemeBloc, ThemeState>(
                                     bloc: BlocProvider.of<ThemeBloc>(context),
@@ -105,8 +106,11 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class BuildStates extends StatefulWidget {
-  const BuildStates({super.key});
-
+  const BuildStates({
+    super.key,
+    required this.isLightTheme,
+  });
+  final bool isLightTheme;
   @override
   State<BuildStates> createState() => _BuildStatesState();
 }
@@ -127,11 +131,13 @@ class _BuildStatesState extends State<BuildStates> {
         if (state is TasksInitialState) {
           return BuildTaskList(
             taskList: state.taskList,
+            isLightTheme: widget.isLightTheme,
           );
         }
         if (state is TasksState) {
           return BuildTaskList(
             taskList: state.taskList,
+            isLightTheme: widget.isLightTheme,
           );
         }
         // return Text("Initial state");
@@ -255,50 +261,80 @@ class BottomSheetContent extends StatelessWidget {
                   ),
                   20.verticalSpace,
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      InkWell(
-                        onTap: () {
-                          final taskName = textController.text.trim();
-                          if (taskName.isNotEmpty) {
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {
                             Navigator.of(context).pop();
-                            BlocProvider.of<TasksBloc>(context)
-                                .add(AddTaskEvent(
-                              task: TaskModel(
-                                id: Xid().toString(),
-                                isCompleted: false,
-                                taskName: taskName,
-                              ),
-                            ));
-                          } else {
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              Flushbar(
-                                title: AppLocalizations.translate(
-                                    "add_task_err_title"),
-                                message: AppLocalizations.translate(
-                                    "add_task_err_msg"),
-                              );
-                            });
-
-                            debugPrint("Error : empty task name");
-                          }
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: isLightTheme
-                                ? const Color.fromARGB(255, 170, 168, 168)
-                                : const Color.fromARGB(255, 31, 31, 31),
-                          ),
-                          child: Text(
-                            // "Add Task",
-                            AppLocalizations.translate("add_task"),
-                            style: TextStyle(
-                              color: isLightTheme
-                                  ? const Color.fromARGB(255, 31, 31, 31)
-                                  : const Color.fromARGB(255, 170, 168, 168),
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              color: Colors.red,
+                              // color: isLightTheme
+                              //     ? const Color.fromARGB(255, 170, 168, 168)
+                              //     : const Color.fromARGB(255, 31, 31, 31),
                             ),
-                          ).padAll(value: 12),
+                            child: Text(
+                              AppLocalizations.translate("cancel_task_add"),
+                              textAlign: TextAlign.center,
+                              // style: TextStyle(
+                              // color: isLightTheme
+                              //     ? const Color.fromARGB(255, 31, 31, 31)
+                              //     : const Color.fromARGB(255, 170, 168, 168),
+                              //     ),
+                            ).padAll(value: 12),
+                          ),
+                        ),
+                      ),
+                      6.horizontalSpace,
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            final taskName = textController.text.trim();
+                            if (taskName.isNotEmpty) {
+                              Navigator.of(context).pop();
+                              BlocProvider.of<TasksBloc>(context)
+                                  .add(AddTaskEvent(
+                                task: TaskModel(
+                                  id: Xid().toString(),
+                                  isCompleted: false,
+                                  taskName: taskName,
+                                ),
+                              ));
+                            } else {
+                              SchedulerBinding.instance
+                                  .addPostFrameCallback((_) {
+                                Flushbar(
+                                  duration: const Duration(seconds: 2),
+                                  title: AppLocalizations.translate(
+                                      "add_task_err_title"),
+                                  message: AppLocalizations.translate(
+                                      "add_task_err_msg"),
+                                  flushbarPosition: FlushbarPosition.TOP,
+                                ).show(context);
+                              });
+
+                              debugPrint("Error : empty task name");
+                            }
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              color: isLightTheme
+                                  ? const Color.fromARGB(255, 170, 168, 168)
+                                  : const Color.fromARGB(255, 31, 31, 31),
+                            ),
+                            child: Text(
+                              AppLocalizations.translate("add_task"),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: isLightTheme
+                                    ? const Color.fromARGB(255, 31, 31, 31)
+                                    : const Color.fromARGB(255, 170, 168, 168),
+                              ),
+                            ).padAll(value: 12),
+                          ),
                         ),
                       ),
                     ],
@@ -318,11 +354,32 @@ class BuildTaskList extends StatelessWidget {
   const BuildTaskList({
     super.key,
     required this.taskList,
+    required this.isLightTheme,
   });
   final List<TaskModel> taskList;
-
+  final bool isLightTheme;
   @override
   Widget build(BuildContext context) {
+    if (taskList.isEmpty) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
+            "assets/splash_screen_logo.png",
+            color: !isLightTheme ? Colors.white : null,
+          ),
+          12.verticalSpace,
+          Text(
+            AppLocalizations.translate("empty_task_list_info"),
+            style: TextStyle(
+              fontSize: 22,
+              color: !isLightTheme ? Colors.white : null,
+            ),
+          ),
+        ],
+      );
+    }
+
     return CustomScrollView(
       slivers: [
         SliverList.builder(
