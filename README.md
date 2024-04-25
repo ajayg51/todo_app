@@ -27,13 +27,13 @@ https://github.com/ajayg51/todo_app/assets/60037249/a0bbca7b-f10b-4907-bd5a-5edc
 ##  Libraries used
 ```
   $  flutter_bloc -- For Bloc implementation
-  hive_flutter -- For local storage
-  path_provider -- To get local storage path
-  another_flushbar -- To show SnackBar
-  swipe_to  -- to swipe up a widget
-  xid -- to generate unique hash codes
-  flutter_localizations: --- For multilingual purposes
-    sdk: flutter 
+  $  hive_flutter -- For local storage
+  $  path_provider -- To get local storage path
+  $  another_flushbar -- To show SnackBar
+  $  swipe_to  -- to swipe up a widget
+  $  xid -- to generate unique hash codes
+  $  flutter_localizations: --- For multilingual purposes
+        sdk: flutter 
 
 ```
 
