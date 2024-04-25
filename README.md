@@ -1,5 +1,3 @@
 # todo_app | ThePetNest Interview Task
 
-
-
-![the_pet_nest_logo](https://github.com/ajayg51/todo_app/assets/60037249/9b5dc089-6efc-4bee-94c0-f31660ba7e84)
+[thePetNest_task.pdf](https://github.com/ajayg51/todo_app/files/15102538/thePetNest_task.pdf)
