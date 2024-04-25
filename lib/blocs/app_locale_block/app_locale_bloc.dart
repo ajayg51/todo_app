@@ -13,6 +13,7 @@ class AppLocaleBloc extends Bloc<LocaleChangeEvent, LocaleState> {
     hiveBox = Hive.box("locale");
 
     on<LocaleChangeEvent>((event, emit) async {
+      
       if (event is AppLocaleChangeInitialEvent) {
         final localeList = hiveBox.values.toList();
         if (localeList.isNotEmpty) {

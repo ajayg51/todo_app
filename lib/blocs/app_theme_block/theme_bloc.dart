@@ -12,9 +12,7 @@ class ThemeBloc extends Bloc<ThemeChangeEvent, ThemeState> {
 
       // final hiveBox = Hive.box("abcd") gives error
 
-      Box<ThemeModel> hiveBox;
-
-      hiveBox = Hive.box("theme");
+      Box<ThemeModel> hiveBox = Hive.box("theme");
 
       if (event is InitialThemeEvent) {
         final hiveBoxList = hiveBox.values.toList();
@@ -24,11 +22,13 @@ class ThemeBloc extends Bloc<ThemeChangeEvent, ThemeState> {
           if (hiveBoxList[0].isLightMode) {
             // debugPrint("initial theme event 2");
             emit(AppThemeState(isLightTheme: true));
+          } else {
+            // debugPrint("initial theme event 3");
+            emit(AppThemeState(isLightTheme: false));
           }
-          // debugPrint("initial theme event 3");
-          emit(AppThemeState(isLightTheme: false));
+        } else {
+          emit(AppThemeState(isLightTheme: true));
         }
-        emit(AppThemeState(isLightTheme: true));
       }
 
       if (event is DarkModeEvent) {

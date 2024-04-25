@@ -10,25 +10,23 @@ import 'package:todo_app/blocs/home_screen_block/home_screen_bloc.dart';
 import 'package:todo_app/models/locale_model.dart';
 import 'package:todo_app/models/task_model.dart';
 import 'package:todo_app/models/theme_model.dart';
-import 'package:todo_app/utils/app_localization.dart';
 import 'package:todo_app/utils/locale_adapter.dart';
+import 'package:todo_app/utils/splash_screen.dart';
 import 'package:todo_app/utils/task_adapter.dart';
 import 'package:todo_app/utils/theme_adapter.dart';
-import 'package:todo_app/widgets/home_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   Directory directory = await getApplicationDocumentsDirectory();
-  
+
   Hive.registerAdapter<TaskModel>(TaskAdapter());
   Hive.registerAdapter<ThemeModel>(ThemeAdapter());
   Hive.registerAdapter<LocaleModel>(LocaleAdapter());
 
-
   await Hive.initFlutter('${directory.path} apk02');
-  
+
   await Hive.openBox<TaskModel>("tasks");
   await Hive.openBox<ThemeModel>("theme");
   await Hive.openBox<LocaleModel>("locale");
@@ -69,10 +67,8 @@ class _MyAppState extends State<MyApp> {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        home: SafeArea(
-          child: Scaffold(
-            body: HomeScreen(),
-          ),
+        home: Scaffold(
+          body: SplashScreen(),
         ),
       ),
     );
